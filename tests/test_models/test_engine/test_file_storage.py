@@ -3,6 +3,7 @@
 """Unit test for file_storage.py"""
 from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
+from models.user import User
 
 from unittest import TestCase
 import os
@@ -42,6 +43,31 @@ class TestFileStorage(TestCase):
         self.assertIn((key_1, base_1),
                       self.engine.all().items())
         self.assertIn((key_2, base_2),
+                      self.engine.all().items())
+
+        # Testing engine.save() and engine.reload()
+        self.engine.save()
+        old_objects = FileStorage._FileStorage__objects.copy()
+        old_objects = {key: str(val) for key, val in old_objects.items()}
+
+        FileStorage._FileStorage__objects.clear()
+        self.engine.reload()
+        new_objects = FileStorage._FileStorage__objects.copy()
+        new_objects = {key: str(val) for key, val in new_objects.items()}
+
+        self.assertEqual(old_objects, new_objects)
+
+    def test_methods_user(self):
+        """Test all FileStorage methods on an User instance."""
+        # Testing engine.new() and engine.all()
+        user_1 = User()
+        user_2 = User()
+        key_1 = "{}.{}".format(type(user_1).__name__, user_1.id)
+        key_2 = "{}.{}".format(type(user_2).__name__, user_2.id)
+
+        self.assertIn((key_1, user_1),
+                      self.engine.all().items())
+        self.assertIn((key_2, user_2),
                       self.engine.all().items())
 
         # Testing engine.save() and engine.reload()

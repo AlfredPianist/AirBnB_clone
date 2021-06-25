@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 """base_model module.
 - Class BaseModel - A base class for the rest of the classes
-- Instance Attributes (private):
+- Instance Attributes (public):
       - id: The id of the instance.
       - created_at: The instance's creation time.
       - updated_at: The instance's update time.
