@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 """Unit test for state.py"""
 from models.base_model import BaseModel
+from models.state import State
 from unittest import TestCase
 from datetime import datetime
 import uuid

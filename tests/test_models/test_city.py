@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 """Unit test for city.py"""
 from models.base_model import BaseModel
+from models.city import City
 from unittest import TestCase
 from datetime import datetime
 import uuid

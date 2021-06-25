@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 """Unit test for review.py"""
 from models.base_model import BaseModel
+from models.review import Review
 from unittest import TestCase
 from datetime import datetime
 import uuid
