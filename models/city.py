@@ -7,6 +7,7 @@
       - name: string - empty string
 """
 from models.base_model import BaseModel
+from models.city import City
 import uuid
 from datetime import datetime
 class City(BaseModel):

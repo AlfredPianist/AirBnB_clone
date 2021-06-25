@@ -6,6 +6,7 @@
       - name: string - empty string
 """
 from models.base_model import BaseModel
+from models.state import State
 import uuid
 from datetime import datetime
 class State(BaseModel):

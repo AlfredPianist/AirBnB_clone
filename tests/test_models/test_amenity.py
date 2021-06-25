@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 """Unit test for amenity.py"""
 from models.base_model import BaseModel
+from models.amenity import Amenity
 from unittest import TestCase
 from datetime import datetime
 import uuid

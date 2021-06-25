@@ -8,6 +8,7 @@
       - text: string - empty string
 """
 from models.base_model import BaseModel
+from models.review import Review
 import uuid
 from datetime import datetime
 class Review(BaseModel):
