@@ -18,7 +18,7 @@ class Review(BaseModel):
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.
         """
-      super().__init__(id)
-      self.place_id = str("")
-      self.user_id = str("")
-      self.text = str("")
+      self.place_id = ""
+      self.user_id = ""
+      self.text = ""
+      super().__init__()

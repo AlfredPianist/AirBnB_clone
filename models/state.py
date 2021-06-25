@@ -16,5 +16,5 @@ class State(BaseModel):
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.
         """
-      super().__init__(id)
-      self.name = str("")
+      self.name = ""
+      super().__init__()

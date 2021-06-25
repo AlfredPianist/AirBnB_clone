@@ -27,11 +27,10 @@ class Place(BaseModel):
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.
         """
-        super().__init__(id)
-        self.city_id = str("")
-        self.user_id = str("")
-        self.name = str("")
-        self.description = str("")
+        self.city_id = ""
+        self.user_id = ""
+        self.name = ""
+        self.description = ""
         self.number_rooms = 0
         self.number_bathrooms = 0
         self.max_guest = 0
@@ -39,3 +38,4 @@ class Place(BaseModel):
         self.latitude = 0.0
         self.longitude = 0.0
         self.amenity_ids = []
+        super().__init__(id)
