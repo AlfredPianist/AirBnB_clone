@@ -6,7 +6,6 @@
       - name: string - empty string
 """
 from models.base_model import BaseModel
-from models.amenity import Amenity
 import uuid
 from datetime import datetime
 class Amenity(BaseModel):
