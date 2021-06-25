@@ -18,6 +18,11 @@ class TestState(TestCase):
     def test_instance(self):
         """Test for correct instancing of State object."""
         self.assertIsInstance(self.base_1, State)
+
+    def test_empty_string(self):
+        """Test for a empty string in the name instance."""
+        name_empty = ""
+        self.assertEqual(self.base_1.name, name_empty)
     
 class TestBaseModelDoc(TestCase):
     "Tests documentation and pep8 for State class."

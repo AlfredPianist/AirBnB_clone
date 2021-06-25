@@ -9,8 +9,8 @@
 from models.base_model import BaseModel
 import uuid
 from datetime import datetime
-class State(BaseModel):
-      """A state class for storing user data, which inherits from BaseModel."""
+class City(BaseModel):
+      """A city class for storing user data, which inherits from BaseModel."""
       def __init__(self, *args, **kwargs):
         """The class constructor.
         Args:
@@ -18,4 +18,5 @@ class State(BaseModel):
             **kwargs: Arbitrary keyword arguments.
         """
       super().__init__(id)
+      self.state_id = str("")
       self.name = str("")
