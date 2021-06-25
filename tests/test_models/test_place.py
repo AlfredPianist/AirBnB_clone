@@ -29,7 +29,7 @@ class TestPlace(TestCase):
     def test_attribute_types(self):
         """Test for correct attribute types of Place object."""
         self.assertIsInstance(self.place_1.city_id, str)
-        self.assertIsInstance(self.place_1.place_id, str)
+        self.assertIsInstance(self.place_1.user_id, str)
         self.assertIsInstance(self.place_1.name, str)
         self.assertIsInstance(self.place_1.description, str)
         self.assertIsInstance(self.place_1.number_rooms, int)
@@ -40,21 +40,21 @@ class TestPlace(TestCase):
         self.assertIsInstance(self.place_1.longitude, float)
 
     def test_empty_string(self):
-        """Test for a empty string in the name instance."""
+        """Test for empty string in Place instance."""
         self.assertEqual(self.place_1.city_id, "")
         self.assertEqual(self.place_1.user_id, "")
         self.assertEqual(self.place_1.name, "")
         self.assertEqual(self.place_1.description, "")
 
     def test_int_value(self):
-        """Test for a integrer value in the name instance."""
+        """Test for 0 integrer value in Place instance."""
         self.assertEqual(self.place_1.number_rooms, 0)
         self.assertEqual(self.place_1.number_bathrooms, 0)
         self.assertEqual(self.place_1.max_guest, 0)
         self.assertEqual(self.place_1.price_by_night, 0)
 
     def test_float_value(self):
-        """Test for a float value in the name instance."""
+        """Test for 0 float value in Place instance."""
         self.assertEqual(self.place_1.latitude, 0.0)
         self.assertEqual(self.place_1.longitude, 0.0)
 
@@ -128,7 +128,7 @@ class TestPlace(TestCase):
         self.assertEqual(self.place_1.__dict__, place_2.__dict__)
 
 
-class TestBaseModelDoc(TestCase):
+class TestPlaceDoc(TestCase):
     "Tests documentation and pep8 for Place class."
 
     @classmethod

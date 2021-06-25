@@ -8,17 +8,17 @@
       - text: string - empty string
 """
 from models.base_model import BaseModel
-import uuid
-from datetime import datetime
+
+
 class Review(BaseModel):
-      """A city class for storing user data, which inherits from BaseModel."""
-      def __init__(self, *args, **kwargs):
+    """A city class for storing user data, which inherits from BaseModel."""
+    def __init__(self, *args, **kwargs):
         """The class constructor.
         Args:
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.
         """
-      self.place_id = ""
-      self.user_id = ""
-      self.text = ""
-      super().__init__()
+        self.place_id = ""
+        self.user_id = ""
+        self.text = ""
+        super().__init__(**kwargs)

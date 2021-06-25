@@ -6,15 +6,16 @@
       - name: string - empty string
 """
 from models.base_model import BaseModel
-import uuid
-from datetime import datetime
+
+
 class Amenity(BaseModel):
-      """A amenity class for storing user data, which inherits from BaseModel."""
-      def __init__(self, *args, **kwargs):
+    """A amenity class for storing user data, which inherits from BaseModel.
+    """
+    def __init__(self, *args, **kwargs):
         """The class constructor.
         Args:
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.
         """
-      super().__init__(id)
-      self.name = str("")
+        self.name = ""
+        super().__init__(**kwargs)

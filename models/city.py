@@ -7,8 +7,8 @@
       - name: string - empty string
 """
 from models.base_model import BaseModel
-import uuid
-from datetime import datetime
+
+
 class City(BaseModel):
     """A city class for storing user data, which inherits from BaseModel."""
 
@@ -18,6 +18,6 @@ class City(BaseModel):
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.
         """
-        self.state_id = ""
+        self.city_id = ""
         self.name = ""
-        super().__init__()
+        super().__init__(**kwargs)
