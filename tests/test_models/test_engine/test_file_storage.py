@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
 """Unit test for file_storage.py"""
-from unittest import TestCase
 from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
+
+from unittest import TestCase
 import os
 import inspect
 import pep8
@@ -85,6 +86,7 @@ class TestFileStorageDoc(TestCase):
         res = p8.check_files(['models/engine/file_storage.py'])
         self.assertEqual(res.total_errors, 0,
                          "Found code style errors (and warnings).")
-        res = p8.check_files(['tests/test_models/test_base_model.py'])
+        res = p8.check_files(
+            ['tests/test_models/test_engine/test_file_storage.py'])
         self.assertEqual(res.total_errors, 0,
                          "Found code style errors (and warnings).")
