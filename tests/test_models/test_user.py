@@ -33,6 +33,13 @@ class TestUser(TestCase):
         self.assertIsInstance(self.user_1.first_name, str)
         self.assertIsInstance(self.user_1.last_name, str)
 
+    def test_empty_string(self):
+        """Test for empty string in User instance."""
+        self.assertEqual(self.user_1.email, "")
+        self.assertEqual(self.user_1.password, "")
+        self.assertEqual(self.user_1.first_name, "")
+        self.assertEqual(self.user_1.last_name, "")
+
     def test_id_creation(self):
         """Test for correct id creation and type."""
         user_1_id = eval("uuid.UUID('" + self.user_1.id + "')")
