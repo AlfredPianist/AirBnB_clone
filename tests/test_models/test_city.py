@@ -3,9 +3,11 @@
 """Unit test for city.py"""
 from models.city import City
 from models.base_model import BaseModel
+from models import storage
 
 from unittest import TestCase
 from datetime import datetime
+import os
 import uuid
 import inspect
 import pep8
@@ -17,6 +19,11 @@ class TestCity(TestCase):
     def setUp(self):
         """Setup for City tests."""
         self.city_1 = City()
+
+    def tearDown(self):
+        """Clean test files."""
+        if os.path.exists(storage._FileStorage__file_path):
+            os.remove(storage._FileStorage__file_path)
 
     def test_instance(self):
         """Test for correct instancing of City object."""
