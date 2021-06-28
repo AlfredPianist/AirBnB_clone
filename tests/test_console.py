@@ -52,7 +52,8 @@ class TestHBNBCommand(TestCase):
         """Test for correct help command output."""
         msg = ("\nDocumented commands (type help <topic>):\n"
                "========================================\n"
-               "EOF  all  create  destroy  help  quit  show  update\n\n")
+               "EOF  all  count  create  destroy  help  quit  show  update"
+               "\n\n")
         with mock.patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help")
         self.assertEqual(f.getvalue(), msg)
@@ -116,6 +117,9 @@ class TestHBNBCommand(TestCase):
             f_id = f.getvalue().split(" ")[1][1:-1]
             self.assertIn(f_class + "." + f_id, storage.all())
 
+    def test_dot_show(self):
+        pass
+
     def test_destroy(self):
         """Test for correct destroy command action."""
         # Correct message "** class name missing **"
@@ -158,6 +162,9 @@ class TestHBNBCommand(TestCase):
         with open(storage._FileStorage__file_path, "r", encoding="utf-8") as f:
             self.assertEqual(f.read(), "{}")
 
+    def test_dot_destroy(self):
+        pass
+
     def test_all(self):
         """Test for correct all command action."""
         # Correct message "** class doesn't exist **"
@@ -198,6 +205,9 @@ class TestHBNBCommand(TestCase):
             correct_output += "\"" + str(val) + "\", "
         correct_output = correct_output[:-2] + "]\n"
         self.assertEqual(f.getvalue(), correct_output)
+
+    def test_dot_all(self):
+        pass
 
     def test_update(self):
         """Test for correct update command action."""
@@ -313,6 +323,15 @@ class TestHBNBCommand(TestCase):
                 self.assertNotEqual(val,
                                     old_storage[rand_key].__dict__[rand_attr])
                 break
+
+    def test_dot_update(self):
+        pass
+
+    def test_dot_update_dict(self):
+        pass
+
+    def test_dot_count(self):
+        pass
 
 
 class TestHBNBCommandDoc(TestCase):

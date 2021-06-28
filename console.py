@@ -14,6 +14,8 @@
 """
 import cmd
 import sys
+import shlex
+import json
 
 from models import storage
 from models.base_model import BaseModel
@@ -31,8 +33,8 @@ class HBNBCommand(cmd.Cmd):
         prompt (str): The shell prompt.
     """
     prompt = "(hbnb) "
-    class_list = ["BaseModel", "User", "Amenity", "City",
-                  "Place", "Review", "State"]
+    class_list = ("BaseModel", "User", "Amenity", "City",
+                  "Place", "Review", "State")
 
     def do_quit(self, arg):
         """\
@@ -46,7 +48,7 @@ class HBNBCommand(cmd.Cmd):
         """
         return True
 
-    def empty_line(self):
+    def emptyline(self):
         """\
         Empty line function. Does nothing.\
         """
@@ -75,7 +77,7 @@ class HBNBCommand(cmd.Cmd):
             Usage: show TYPE ID
             Example: show BaseModel 1234-1234-1234\
         """
-        arg_list = arg.split(" ")
+        arg_list = arg.split(" ") if type(arg) == str else arg
         if not arg:
             print("** class name missing **")
             return
@@ -98,7 +100,7 @@ class HBNBCommand(cmd.Cmd):
             Usage: destroy TYPE ID
             Example: destroy BaseModel 1234-1234-1234\
         """
-        arg_list = arg.split(" ")
+        arg_list = arg.split(" ") if type(arg) == str else arg
         if not arg:
             print("** class name missing **")
             return
@@ -122,7 +124,7 @@ class HBNBCommand(cmd.Cmd):
             Examples: all
                       all BaseModel
         """
-        arg_list = arg.split(" ")
+        arg_list = arg.split(" ") if type(arg) == str else arg
         if arg:
             if arg_list[0] not in HBNBCommand.class_list:
                 print("** class doesn't exist **")
@@ -143,7 +145,7 @@ class HBNBCommand(cmd.Cmd):
             Usage: update TYPE ID ATTRIBUTE_NAME ATTRIBUTE_VALUE
             Example: update BaseModel 1234-1234-1234 email "hbnb@hlbrtn.com"\
         """
-        arg_list = arg.split(" ")
+        arg_list = arg.split(" ") if type(arg) == str else arg
         if not arg:
             print("** class name missing **")
             return
@@ -157,6 +159,12 @@ class HBNBCommand(cmd.Cmd):
         if key not in storage.all():
             print("** no instance found **")
             return
+        if len(arg_list) == 3 and type(arg_list[2]) == dict:
+            obj = storage.all()[key]
+            for key, val in arg_list[2].items():
+                setattr(obj, key, val)
+                obj.save()
+            return
         if len(arg_list) < 3:
             print("** attribute name missing **")
             return
@@ -164,8 +172,46 @@ class HBNBCommand(cmd.Cmd):
             print("** value missing **")
             return
         obj = storage.all()[key]
-        setattr(obj, arg_list[2], arg_list[3])
+        setattr(obj, arg_list[2].replace('"', "").replace("'", ""),
+                arg_list[3].replace('"', "").replace("'", ""))
         obj.save()
+
+    def do_count(self, arg):
+        pass
+
+    def default(self, line):
+        """\
+        Parses when command is of type TYPE.COMMAND(ARGS).
+            Example: BaseModel.all()\
+        """
+        lexer = shlex.shlex(line)
+        lexer.wordchars += "-"
+        lexer = list(lexer)
+        arg = []
+        func_name = ""
+        idx = 0
+        in_paren = False
+
+        while idx < len(lexer):
+            if lexer[idx][0].islower() is True and func_name == "":
+                func_name = lexer[idx]
+            elif in_paren is True:
+                if lexer[idx] == "{":
+                    dict_str = "".join(lexer[idx:-1])
+                    dict_str = dict_str.replace("'", '"')
+                    arg.append(json.loads(dict_str))
+                    idx = len(lexer) - 1
+                if lexer[idx] not in ",)":
+                    arg.append(lexer[idx].replace('"', "").replace("'", ""))
+            elif lexer[idx] == "(":
+                in_paren = True
+            elif lexer[idx] != ".":
+                arg.append(lexer[idx].replace('"', "").replace("'", ""))
+            idx += 1
+
+        cmd_list = ("all", "count", "show", "destroy", "update")
+        if func_name in cmd_list:
+            eval("self.do_" + func_name + "(arg)")
 
 
 if __name__ == '__main__':
