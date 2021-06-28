@@ -21,8 +21,11 @@ from models import storage
 class TestHBNBCommand(TestCase):
     """Test cases for HBNBCommand class."""
 
-    @classmethod
-    def tearDownClass(self):
+    def setUp(self):
+        """Setup for FileStorage tests."""
+        storage._FileStorage__objects.clear()
+
+    def tearDown(self):
         """Clean test files."""
         if os.path.exists(storage._FileStorage__file_path):
             os.remove(storage._FileStorage__file_path)
@@ -544,6 +547,9 @@ class TestHBNBCommand(TestCase):
         self.assertEqual(f.getvalue(), "** class doesn't exist **\n")
 
         # Correct message "** instance id missing **"
+        for class_name in HBNBCommand().class_list:
+            with mock.patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("create " + class_name)
         rand_class = random.choice(HBNBCommand().class_list)
         with mock.patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd(rand_class + ".update()")
@@ -603,8 +609,43 @@ class TestHBNBCommand(TestCase):
                                 __dict__[attr])
             break
 
+    def test_count(self):
+        """Test for correct count command action."""
+        # Correct message "** class name missing **"
+        with mock.patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("count")
+        self.assertEqual(f.getvalue(), "** class name missing **\n")
+        # Correct message "** class doesn't exist **"
+        with mock.patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("count MyModel")
+        self.assertEqual(f.getvalue(), "** class doesn't exist **\n")
+
+        # Correct count of object
+        for class_name in HBNBCommand().class_list:
+            with mock.patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("create " + class_name)
+
+        for class_name in HBNBCommand().class_list:
+            with mock.patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("count " + class_name)
+            self.assertEqual(f.getvalue(), "1\n")
+
     def test_dot_count(self):
-        pass
+        """Test for correct count command action with its dot version."""
+        # Correct message "** class doesn't exist **"
+        with mock.patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("MyModel.count()")
+        self.assertEqual(f.getvalue(), "** class doesn't exist **\n")
+
+        # Correct count of object
+        for class_name in HBNBCommand().class_list:
+            with mock.patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("create " + class_name)
+
+        for class_name in HBNBCommand().class_list:
+            with mock.patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd(class_name + ".count()")
+            self.assertEqual(f.getvalue(), "1\n")
 
 
 class TestHBNBCommandDoc(TestCase):

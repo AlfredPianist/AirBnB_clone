@@ -200,11 +200,21 @@ class HBNBCommand(cmd.Cmd):
 
     def do_count(self, arg):
         """\
-        Counts the number of instances of type TYPE.
-            Usage: TYPE.count()
-            Example: BaseModel.count()\
+        Prints the number of instances of type TYPE.
+            Usage: count TYPE
+            Examples: count BaseModel
+                      BaseModel.count()\
         """
-        pass
+        arg_list = arg.split(" ") if type(arg) == str else arg
+        if not arg:
+            print("** class name missing **")
+            return
+        if arg_list[0] not in HBNBCommand.class_list:
+            print("** class doesn't exist **")
+            return
+        objs = [key for key in map(lambda x: x.split(".")[0],
+                                   storage.all().keys())]
+        print(objs.count(arg_list[0]))
 
     def default(self, line):
         """\
