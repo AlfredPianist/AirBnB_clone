@@ -5,12 +5,22 @@
                       for testing the storage engine of the HBnB project.
 - Instance Attributes (public):
       - prompt: The prompt to be shown.
+      - class_list: The list of available classes to operate.
 - Methods (public):
       - do_quit: Exits the shell.
       - do_EOF: Exits the shell.
       - do_create: Creates a new instance of an object and prints its id.
       - do_show: Shows the string representation of an object given its class
                  name and id.
+      - do_destroy: Destroys an object given its class name and id.
+      - do_all: Shows the string representation of all objects of a given class
+                or all objects created of all classes.
+      - do_update: Updates the attributes of an object given its class
+                 name and id with an attribute and its value. It supports
+                 also its dictionary representation.
+      - do_count: Counts the number of instances of a given class.
+      - default: Parses the dot versions of commands show, destroy, all,
+                 update and count.
 """
 import cmd
 import sys
@@ -31,6 +41,7 @@ class HBNBCommand(cmd.Cmd):
     """The shell for the HBnB project.
     Attributes:
         prompt (str): The shell prompt.
+        class_list (tuple of str): The list of available classes to operate.
     """
     prompt = "(hbnb) "
     class_list = ("BaseModel", "User", "Amenity", "City",
@@ -74,8 +85,9 @@ class HBNBCommand(cmd.Cmd):
     def do_show(self, arg):
         """\
         Prints a string representation of an instance type TYPE with id ID.
-            Usage: show TYPE ID
-            Example: show BaseModel 1234-1234-1234\
+            Usage: show TYPE ID | TYPE.show(ID)
+            Examples: show BaseModel 1234-1234-1234
+                      BaseModel.show(1234-1234-1234)\
         """
         arg_list = arg.split(" ") if type(arg) == str else arg
         if not arg:
@@ -97,8 +109,9 @@ class HBNBCommand(cmd.Cmd):
         """\
         Deletes an instance type TYPE with id ID and saves the changes
         in a JSON file.
-            Usage: destroy TYPE ID
-            Example: destroy BaseModel 1234-1234-1234\
+            Usage: destroy TYPE ID | TYPE.destroy(ID)
+            Example: destroy BaseModel 1234-1234-1234
+                     BaseModel.destroy(1234-1234-1234)\
         """
         arg_list = arg.split(" ") if type(arg) == str else arg
         if not arg:
@@ -120,9 +133,10 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, arg):
         """\
         Prints a string representation of type TYPE or all types.
-            Usage: all [TYPE]
+            Usage: all [TYPE] | TYPE.all()
             Examples: all
                       all BaseModel
+                      BaseModel.all()\
         """
         arg_list = arg.split(" ") if type(arg) == str else arg
         if arg:
@@ -142,8 +156,16 @@ class HBNBCommand(cmd.Cmd):
         """\
         Updates an instance of type TYPE and id ID with ATTRIBUTE_NAME
         and ATTRIBUTE_VALUE and saves it to a JSON file.
-            Usage: update TYPE ID ATTRIBUTE_NAME ATTRIBUTE_VALUE
-            Example: update BaseModel 1234-1234-1234 email "hbnb@hlbrtn.com"\
+        It also supports updating using a dictionary representation
+        of ATTRIBUTE_NAME: ATTRIBUTE_VALUE pairs.
+            Usage: update TYPE ID ATTRIBUTE_NAME ATTRIBUTE_VALUE |
+                   TYPE.update(ID, ATTRIBUTE_NAME, ATTRIBUTE_VALUE) |
+                   TYPE.update(ID, {ATTRIBUTE_NAME: ATTRIBUTE_VALUE[, ...]})
+            Examples: update BaseModel 1234-1234-1234 email "hbnb@hlbrtn.com"
+                      BaseModel.update(1234-1234-1234, email,
+                                       "hbnb@hlbrtn.com")
+                      BaseModel.update(1234-1234-1234,
+                                       {"email": "hbnb@hlbrtn.com"})\
         """
         arg_list = arg.split(" ") if type(arg) == str else arg
         if not arg:
@@ -177,6 +199,11 @@ class HBNBCommand(cmd.Cmd):
         obj.save()
 
     def do_count(self, arg):
+        """\
+        Counts the number of instances of type TYPE.
+            Usage: TYPE.count()
+            Example: BaseModel.count()\
+        """
         pass
 
     def default(self, line):

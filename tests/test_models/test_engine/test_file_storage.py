@@ -6,6 +6,7 @@ from models.base_model import BaseModel
 from models.user import User
 
 from unittest import TestCase
+import copy
 import os
 import inspect
 import pep8
@@ -47,7 +48,7 @@ class TestFileStorage(TestCase):
 
         # Testing engine.save() and engine.reload()
         self.engine.save()
-        old_objects = FileStorage._FileStorage__objects.copy()
+        old_objects = copy.deepcopy(FileStorage._FileStorage__objects)
         old_objects = {key: str(val) for key, val in old_objects.items()}
 
         FileStorage._FileStorage__objects.clear()
