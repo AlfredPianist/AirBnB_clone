@@ -177,7 +177,25 @@ class HBNBCommand(cmd.Cmd):
         obj.save()
 
     def do_count(self, arg):
-        pass
+        """\
+        Prints the number of instances of a class.
+            Usage: count [CLASS]
+            Examples: count User
+                      User.count()
+        """
+        arg_list = arg.split(" ") if type(arg) == str else arg
+        if not arg:
+            print("** class name missing **")
+            return
+        val_obj = 0
+        val_obj = storage.all().values()
+        if arg_list[0] not in HBNBCommand.class_list:
+            print("** class doesn't exist **")
+            return
+        else:
+            def flt(x):
+                return x.__class__.__name__ == arg_list[0]
+            print(len([obj for obj in val_obj if flt]))      
 
     def default(self, line):
         """\
