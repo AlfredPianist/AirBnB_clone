@@ -5,6 +5,7 @@ from models.base_model import BaseModel
 
 from unittest import TestCase
 from datetime import datetime
+import time
 import uuid
 import inspect
 import pep8
@@ -47,6 +48,7 @@ class TestBaseModel(TestCase):
     def test_save(self):
         """Test for correct update of attribute updated_at"""
         old_updated_at = self.base_1.updated_at
+        time.sleep(0.5)
         self.base_1.save()
 
         self.assertNotEqual(self.base_1.created_at, self.base_1.updated_at)

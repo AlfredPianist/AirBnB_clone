@@ -53,7 +53,7 @@ class TestFileStorage(TestCase):
 
         FileStorage._FileStorage__objects.clear()
         self.engine.reload()
-        new_objects = FileStorage._FileStorage__objects.copy()
+        new_objects = copy.deepcopy(FileStorage._FileStorage__objects)
         new_objects = {key: str(val) for key, val in new_objects.items()}
 
         self.assertEqual(old_objects, new_objects)
@@ -73,12 +73,12 @@ class TestFileStorage(TestCase):
 
         # Testing engine.save() and engine.reload()
         self.engine.save()
-        old_objects = FileStorage._FileStorage__objects.copy()
+        old_objects = copy.deepcopy(FileStorage._FileStorage__objects)
         old_objects = {key: str(val) for key, val in old_objects.items()}
 
         FileStorage._FileStorage__objects.clear()
         self.engine.reload()
-        new_objects = FileStorage._FileStorage__objects.copy()
+        new_objects = copy.deepcopy(FileStorage._FileStorage__objects)
         new_objects = {key: str(val) for key, val in new_objects.items()}
 
         self.assertEqual(old_objects, new_objects)
