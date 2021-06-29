@@ -40,7 +40,7 @@ class TestCity(TestCase):
 
     def test_empty_string(self):
         """Test for empty string in City instance."""
-        self.assertEqual(self.city_1.city_id, "")
+        self.assertEqual(self.city_1.state_id, "")
         self.assertEqual(self.city_1.name, "")
 
     def test_id_creation(self):
