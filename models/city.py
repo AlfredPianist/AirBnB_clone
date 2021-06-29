@@ -2,22 +2,18 @@
 # -*- coding:utf-8 -*-
 """city module.
 - Class City - A city class to save data of the users
-- Instance Attributes (public):
-      - state_id: string - empty string: it will be the State.id
-      - name: string - empty string
+- Class Attributes (public):
+      - city_id: The city's id.
+      - name: The city's name.
 """
 from models.base_model import BaseModel
 
 
 class City(BaseModel):
-    """A city class for storing user data, which inherits from BaseModel."""
-
-    def __init__(self, *args, **kwargs):
-        """The class constructor.
-        Args:
-            *args: Variable length argument list.
-            **kwargs: Arbitrary keyword arguments.
-        """
-        self.city_id = ""
-        self.name = ""
-        super().__init__(**kwargs)
+    """A city class for storing user data, which inherits from BaseModel.
+    Attributes:
+        city_id (str): The city id.
+        name (str): The city's name.
+    """
+    city_id = ""
+    name = ""

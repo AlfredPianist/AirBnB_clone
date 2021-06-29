@@ -2,40 +2,45 @@
 # -*- coding:utf-8 -*-
 """place module.
 - Class Place - A place class to save data of the users
-- Instance Attributes (public):
-      - city_id: string - empty string: it will be the City.id
-      - user_id: string - empty string: it will be the User.id
-      - name: string - empty string
-      - description: string - empty string
-      - number_rooms: integer - 0
-      - number_bathrooms: integer - 0
-      - max_guest: integer - 0
-      - price_by_night: integer - 0
-      - latitude: float - 0.0
-      - longitude: float - 0.0
-      - amenity_ids: list of string - empty list: it will be the list of
-                     Amenity.id later
+- Class Attributes (public):
+      - city_id: The city's id.
+      - user_id: The user's id.
+      - name: The place's name.
+      - description: The place's description.
+      - number_rooms: The place's number of rooms.
+      - number_bathrooms: The place's number of bathrooms.
+      - max_guest: The place's maximum number of guests.
+      - price_by_night: The place's price by night.
+      - latitude: The place's latitude.
+      - longitude: The place's longitude.
+      - amenity_ids: The list of amenity ids.
 """
 from models.base_model import BaseModel
 
 
 class Place(BaseModel):
-    """A place class for storing user data, which inherits from BaseModel."""
-    def __init__(self, *args, **kwargs):
-        """The class constructor.
-        Args:
-            *args: Variable length argument list.
-            **kwargs: Arbitrary keyword arguments.
-        """
-        self.city_id = ""
-        self.user_id = ""
-        self.name = ""
-        self.description = ""
-        self.number_rooms = 0
-        self.number_bathrooms = 0
-        self.max_guest = 0
-        self.price_by_night = 0
-        self.latitude = 0.0
-        self.longitude = 0.0
-        self.amenity_ids = []
-        super().__init__(**kwargs)
+    """A place class for storing user data, which inherits from BaseModel.
+    Attributes:
+        city_id (str): The city's id.
+        user_id (str): The user's id.
+        name (str): The place's name.
+        description (str): The place's description.
+        number_rooms (int): The place's number of rooms.
+        number_bathrooms (int): The place's number of bathrooms.
+        max_guest (int): The place's maximum number of guests.
+        price_by_night (int): The place's price by night.
+        latitude (float): The place's latitude.
+        longitude (float): The place's longitude.
+        amenity_ids (list of str): The list of amenity ids.
+    """
+    city_id = ""
+    user_id = ""
+    name = ""
+    description = ""
+    number_rooms = 0
+    number_bathrooms = 0
+    max_guest = 0
+    price_by_night = 0
+    latitude = 0.0
+    longitude = 0.0
+    amenity_ids = []
