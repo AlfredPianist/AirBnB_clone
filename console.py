@@ -167,7 +167,24 @@ class HBNBCommand(cmd.Cmd):
                       BaseModel.update(1234-1234-1234,
                                        {"email": "hbnb@hlbrtn.com"})\
         """
-        arg_list = arg.split(" ") if type(arg) == str else arg
+        if type(arg) == str:
+            arg_list = shlex.shlex(arg)
+            arg_list.wordchars += "-"
+            arg_list = list(arg_list)
+            try:
+                idx_start = arg_list.index("[")
+                idx_end = arg_list.index("]")
+                list_str = "".join(arg_list[idx_start:idx_end + 1])
+                list_str = eval(list_str)
+                list_start = arg_list[:idx_start]
+                list_end = arg_list[idx_end + 1:]
+                arg_list = list_start
+                arg_list.append(list_str)
+                arg_list.extend(list_end)
+            except ValueError:
+                pass
+        else:
+            arg_list = arg
         if not arg:
             print("** class name missing **")
             return
@@ -194,8 +211,10 @@ class HBNBCommand(cmd.Cmd):
             print("** value missing **")
             return
         obj = storage.all()[key]
+        if type(arg_list[3]) != list:
+            arg_list[3].replace('"', "").replace("'", "")
         setattr(obj, arg_list[2].replace('"', "").replace("'", ""),
-                arg_list[3].replace('"', "").replace("'", ""))
+                arg_list[3])
         obj.save()
 
     def do_count(self, arg):
@@ -233,6 +252,12 @@ class HBNBCommand(cmd.Cmd):
             if lexer[idx][0].islower() is True and func_name == "":
                 func_name = lexer[idx]
             elif in_paren is True:
+                if lexer[idx] == "[":
+                    idx_start = lexer.index("[")
+                    idx_end = lexer.index("]")
+                    list_str = "".join(lexer[idx_start:idx_end + 1])
+                    arg.append(eval(list_str))
+                    idx = idx_end
                 if lexer[idx] == "{":
                     dict_str = "".join(lexer[idx:-1])
                     dict_str = dict_str.replace("'", '"')

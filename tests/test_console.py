@@ -300,7 +300,6 @@ class TestHBNBCommand(TestCase):
             correct_output = correct_output[:-2] + "]\n"
             self.assertEqual(f.getvalue(), correct_output)
 
-    @unittest.skip("Testing if checker ok with class attr.")
     def test_update(self):
         """Test for correct update command action."""
         # Correct message "** class name missing **"
@@ -357,8 +356,8 @@ class TestHBNBCommand(TestCase):
                 key = [key for key in storage.all()
                        if key.split(".")[0] != "BaseModel"]
                 rand_key = random.choice(key)
-                attr = attr_dict[rand_key.split(".")[0]].keys()
-                rand_attr = random.sample(attr, 2)
+                attr = list(attr_dict[rand_key.split(".")[0]].keys())
+                rand_attr = random.choice(attr)
                 done = True
             except ValueError:
                 pass
@@ -375,7 +374,7 @@ class TestHBNBCommand(TestCase):
                 key = [key for key in storage.all()
                        if key.split(".")[0] != "BaseModel"]
                 rand_key = random.choice(key)
-                attr = attr_dict[rand_key.split(".")[0]].keys()
+                attr = list(attr_dict[rand_key.split(".")[0]].keys())
                 rand_attr = random.sample(attr, 2)
                 done = True
             except ValueError:
@@ -383,21 +382,26 @@ class TestHBNBCommand(TestCase):
         rand_key = rand_key.split(".")
         rand_val = []
         for at in rand_attr:
-            if type(attr_dict[rand_key[rand_key[0]]]) == str:
+            if type(attr_dict[rand_key[0]][at]) == str:
                 rand_val.append(''.join(random.choice(string.ascii_letters)
                                         for _ in range(20)))
-            if type(at) == int:
+            if type(attr_dict[rand_key[0]][at]) == int:
                 rand_val.append(random.randint(1, 1000))
-            if type(at) == float:
-                rand_val.append(random.random() * 10)
+            if type(attr_dict[rand_key[0]][at]) == float:
+                rand_val.append(random.random() * 10.0)
+            if type(attr_dict[rand_key[0]][at]) == list:
+                val = []
+                for i in range(3):
+                    val.append(''.join(random.choice(string.ascii_letters)
+                                       for _ in range(20)))
+                rand_val.append(val)
         with mock.patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("update " +
                                  rand_key[0] + " " + rand_key[1] + " " +
-                                 rand_attr[0] + " " + rand_val[0] + " " +
-                                 rand_attr[1] + " " + rand_val[1])
+                                 rand_attr[0] + " " + str(rand_val[0]) + " " +
+                                 rand_attr[1] + " " + str(rand_val[1]))
         rand_key = rand_key[0] + "." + rand_key[1]
-        self.assertNotEqual(storage.all()[rand_key].__dict__[rand_attr[1]],
-                            rand_val[1])
+        self.assertNotIn(rand_attr[1], storage.all()[rand_key].__dict__)
         with open(storage._FileStorage__file_path, "r", encoding="utf-8") as f:
             json_dict = json.load(f)
         for attr, val in json_dict[rand_key].items():
@@ -406,42 +410,56 @@ class TestHBNBCommand(TestCase):
                 break
 
         # Correct update of object
-        key = [key for key in storage.all()
-               if key.split(".")[0] != "BaseModel"]
-        rand_key = random.choice(key)
-        attr = [key for key in storage.all()[rand_key].__dict__
-                if key not in ["id", "created_at", "updated_at"]]
-        rand_attr = random.choice(attr)
+        storage._FileStorage__objects.clear()
+        if os.path.exists(storage._FileStorage__file_path):
+            os.remove(storage._FileStorage__file_path)
+        for class_name in HBNBCommand().class_list:
+            with mock.patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("create " + class_name)
+        done = False
+        while (done is False):
+            try:
+                key = [key for key in storage.all()
+                       if key.split(".")[0] != "BaseModel"]
+                rand_key = random.choice(key)
+                attr = list(attr_dict[rand_key.split(".")[0]].keys())
+                rand_attr = random.sample(attr, 2)
+                done = True
+            except ValueError:
+                pass
         rand_key = rand_key.split(".")
-        if type(rand_attr) == str:
+        rand_attr = random.choice(attr)
+        if type(attr_dict[rand_key[0]][rand_attr]) == str:
             rand_val = ''.join(random.choice(string.ascii_letters)
                                for _ in range(20))
-        if type(rand_attr) == int:
+        if type(attr_dict[rand_key[0]][rand_attr]) == int:
             rand_val = random.randint(1, 1000)
-        if type(rand_attr) == float:
-            rand_val = random.random() * 10
+        if type(attr_dict[rand_key[0]][rand_attr]) == float:
+            rand_val = random.random() * 10.0
+        if type(attr_dict[rand_key[0]][rand_attr]) == list:
+            rand_val = []
+            for i in range(3):
+                rand_val.append(''.join(random.choice(string.ascii_letters)
+                                        for _ in range(20)))
         old_storage = copy.deepcopy(storage.all())
         with mock.patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("update " +
                                  rand_key[0] + " " + rand_key[1] + " " +
-                                 rand_attr + " " + rand_val)
+                                 rand_attr + " " + str(rand_val))
         rand_key = rand_key[0] + "." + rand_key[1]
-        self.assertEqual(storage.all()[rand_key].__dict__[rand_attr],
-                         rand_val)
-        self.assertNotEqual(old_storage[rand_key].__dict__[rand_attr],
-                            rand_val)
+        self.assertNotIn(rand_attr, old_storage[rand_key].__dict__)
+        self.assertIn(rand_attr, storage.all()[rand_key].__dict__)
         with open(storage._FileStorage__file_path, "r", encoding="utf-8") as f:
             json_dict = json.load(f)
         for attr, val in json_dict[rand_key].items():
             if attr == rand_attr:
-                self.assertEqual(val, rand_val)
+                self.assertEqual(str(val), str(rand_val))
                 self.assertEqual(val,
                                  storage.all()[rand_key].__dict__[rand_attr])
-                self.assertNotEqual(val,
-                                    old_storage[rand_key].__dict__[rand_attr])
+                self.assertNotIn(attr,
+                                 old_storage[rand_key].__dict__)
                 break
 
-    @unittest.skip("Testing if checker ok with class attr.")
     def test_dot_update(self):
         """Test for correct update command action with its dot version."""
         # Correct message "** class doesn't exist **"
@@ -472,16 +490,37 @@ class TestHBNBCommand(TestCase):
         self.assertEqual(f.getvalue(), "** attribute name missing **\n")
 
         # Correct message "** value missing **"
-        key = [key for key in storage.all()
-               if key.split(".")[0] != "BaseModel"]
-        rand_key = random.choice(key)
-        attr = [key for key in storage.all()[rand_key].__dict__
-                if key not in ["id", "created_at", "updated_at"]]
-        rand_attr = random.choice(attr)
+        attr_dict = {"Amenity": {"name": ""},
+                     "City": {"state_id": "", "name": ""},
+                     "User":
+                     {"email": "", "password": "",
+                      "first_name": "", "last_name": ""},
+                     "Place":
+                     {"city_id": "", "user_id": "",
+                      "name": "", "description": "",
+                      "number_rooms": 0, "number_bathrooms": 0,
+                      "max_guest": 0, "price_by_night": 0,
+                      "latitude": 0.0, "longitude": 0.0,
+                      "amenity_ids": []},
+                     "Review":
+                     {"place_id": "", "user_id": "", "text": ""},
+                     "State": {"name": ""}}
+        done = False
+        while (done is False):
+            try:
+                key = [key for key in storage.all()
+                       if key.split(".")[0] != "BaseModel"]
+                rand_key = random.choice(key)
+                attr = list(attr_dict[rand_key.split(".")[0]].keys())
+                rand_attr = random.choice(attr)
+                done = True
+            except ValueError:
+                pass
         rand_key = rand_key.split(".")
         with mock.patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd(rand_key[0] + ".update(" +
-                                 rand_key[1] + ", " + rand_attr + ")")
+                                 rand_key[1] + ", " + rand_attr +
+                                 ")")
         self.assertEqual(f.getvalue(), "** value missing **\n")
 
         # Correct ignore of multiple ATTRIBUTE_NAME and ATTRIBUTE_VALUE
@@ -491,8 +530,7 @@ class TestHBNBCommand(TestCase):
                 key = [key for key in storage.all()
                        if key.split(".")[0] != "BaseModel"]
                 rand_key = random.choice(key)
-                attr = [key for key in storage.all()[rand_key].__dict__
-                        if key not in ["id", "created_at", "updated_at"]]
+                attr = list(attr_dict[rand_key.split(".")[0]].keys())
                 rand_attr = random.sample(attr, 2)
                 done = True
             except ValueError:
@@ -500,21 +538,28 @@ class TestHBNBCommand(TestCase):
         rand_key = rand_key.split(".")
         rand_val = []
         for at in rand_attr:
-            if type(at) == str:
+            if type(attr_dict[rand_key[0]][at]) == str:
                 rand_val.append(''.join(random.choice(string.ascii_letters)
                                         for _ in range(20)))
-            if type(at) == int:
+            if type(attr_dict[rand_key[0]][at]) == int:
                 rand_val.append(random.randint(1, 1000))
-            if type(at) == float:
-                rand_val.append(random.random() * 10)
+            if type(attr_dict[rand_key[0]][at]) == float:
+                rand_val.append(random.random() * 10.0)
+            if type(attr_dict[rand_key[0]][at]) == list:
+                val = []
+                for i in range(3):
+                    val.append(''.join(random.choice(string.ascii_letters)
+                                       for _ in range(20)))
+                rand_val.append(val)
         with mock.patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd(rand_key[0] + ".update(" +
                                  rand_key[1] + ", " +
-                                 rand_attr[0] + ", " + rand_val[0] + ", " +
-                                 rand_attr[1] + ", " + rand_val[1] + ")")
+                                 rand_attr[0] + ", " +
+                                 str(rand_val[0]) + ", " +
+                                 rand_attr[1] + ", " +
+                                 str(rand_val[1]) + ")")
         rand_key = rand_key[0] + "." + rand_key[1]
-        self.assertNotEqual(storage.all()[rand_key].__dict__[rand_attr[1]],
-                            rand_val[1])
+        self.assertNotIn(rand_attr[1], storage.all()[rand_key].__dict__)
         with open(storage._FileStorage__file_path, "r", encoding="utf-8") as f:
             json_dict = json.load(f)
         for attr, val in json_dict[rand_key].items():
@@ -523,42 +568,57 @@ class TestHBNBCommand(TestCase):
                 break
 
         # Correct update of object
-        key = [key for key in storage.all()
-               if key.split(".")[0] != "BaseModel"]
-        rand_key = random.choice(key)
-        attr = [key for key in storage.all()[rand_key].__dict__
-                if key not in ["id", "created_at", "updated_at"]]
-        rand_attr = random.choice(attr)
+        storage._FileStorage__objects.clear()
+        if os.path.exists(storage._FileStorage__file_path):
+            os.remove(storage._FileStorage__file_path)
+        for class_name in HBNBCommand().class_list:
+            with mock.patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("create " + class_name)
+        done = False
+        while (done is False):
+            try:
+                key = [key for key in storage.all()
+                       if key.split(".")[0] != "BaseModel"]
+                rand_key = random.choice(key)
+                attr = list(attr_dict[rand_key.split(".")[0]].keys())
+                rand_attr = random.sample(attr, 2)
+                done = True
+            except ValueError:
+                pass
         rand_key = rand_key.split(".")
-        if type(rand_attr) == str:
+        rand_attr = random.choice(attr)
+        if type(attr_dict[rand_key[0]][rand_attr]) == str:
             rand_val = ''.join(random.choice(string.ascii_letters)
                                for _ in range(20))
-        if type(rand_attr) == int:
+        if type(attr_dict[rand_key[0]][rand_attr]) == int:
             rand_val = random.randint(1, 1000)
-        if type(rand_attr) == float:
-            rand_val = random.random() * 10
+        if type(attr_dict[rand_key[0]][rand_attr]) == float:
+            rand_val = random.random() * 10.0
+        if type(attr_dict[rand_key[0]][rand_attr]) == list:
+            rand_val = []
+            for i in range(3):
+                rand_val.append(''.join(random.choice(string.ascii_letters)
+                                        for _ in range(20)))
         old_storage = copy.deepcopy(storage.all())
         with mock.patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd(rand_key[0] + ".update(" +
                                  rand_key[1] + ", " +
-                                 rand_attr + ", " + rand_val + ")")
+                                 rand_attr + ", " +
+                                 str(rand_val) + ")")
         rand_key = rand_key[0] + "." + rand_key[1]
-        self.assertEqual(storage.all()[rand_key].__dict__[rand_attr],
-                         rand_val)
-        self.assertNotEqual(old_storage[rand_key].__dict__[rand_attr],
-                            rand_val)
+        self.assertNotIn(rand_attr, old_storage[rand_key].__dict__)
+        self.assertIn(rand_attr, storage.all()[rand_key].__dict__)
         with open(storage._FileStorage__file_path, "r", encoding="utf-8") as f:
             json_dict = json.load(f)
         for attr, val in json_dict[rand_key].items():
             if attr == rand_attr:
-                self.assertEqual(val, rand_val)
+                self.assertEqual(str(val), str(rand_val))
                 self.assertEqual(val,
                                  storage.all()[rand_key].__dict__[rand_attr])
-                self.assertNotEqual(val,
-                                    old_storage[rand_key].__dict__[rand_attr])
+                self.assertNotIn(attr,
+                                 old_storage[rand_key].__dict__)
                 break
 
-    @unittest.skip("Testing if checker ok with class attr.")
     def test_dot_update_dict(self):
         """\
         Test for correct update command action with its dot version using
@@ -586,28 +646,48 @@ class TestHBNBCommand(TestCase):
         self.assertEqual(f.getvalue(), "** no instance found **\n")
 
         # Correct update of object
+        attr_dict = {"Amenity": {"name": ""},
+                     "City": {"state_id": "", "name": ""},
+                     "User":
+                     {"email": "", "password": "",
+                      "first_name": "", "last_name": ""},
+                     "Place":
+                     {"city_id": "", "user_id": "",
+                      "name": "", "description": "",
+                      "number_rooms": 0, "number_bathrooms": 0,
+                      "max_guest": 0, "price_by_night": 0,
+                      "latitude": 0.0, "longitude": 0.0,
+                      "amenity_ids": []},
+                     "Review":
+                     {"place_id": "", "user_id": "", "text": ""},
+                     "State": {"name": ""}}
         done = False
         while (done is False):
             try:
                 key = [key for key in storage.all()
                        if key.split(".")[0] != "BaseModel"]
                 rand_key = random.choice(key)
-                attr = [key for key in storage.all()[rand_key].__dict__
-                        if key not in ["id", "created_at", "updated_at"]]
-                rand_attr = random.sample(attr, 3)
+                attr = list(attr_dict[rand_key.split(".")[0]].keys())
+                rand_attr = random.sample(attr, 2)
                 done = True
             except ValueError:
                 pass
         rand_key = rand_key.split(".")
         rand_val = []
         for at in rand_attr:
-            if type(at) == str:
+            if type(attr_dict[rand_key[0]][at]) == str:
                 rand_val.append(''.join(random.choice(string.ascii_letters)
                                         for _ in range(20)))
-            if type(at) == int:
+            if type(attr_dict[rand_key[0]][at]) == int:
                 rand_val.append(random.randint(1, 1000))
-            if type(at) == float:
-                rand_val.append(random.random() * 10)
+            if type(attr_dict[rand_key[0]][at]) == float:
+                rand_val.append(random.random() * 10.0)
+            if type(attr_dict[rand_key[0]][at]) == list:
+                val = []
+                for i in range(3):
+                    val.append(''.join(random.choice(string.ascii_letters)
+                                       for _ in range(20)))
+                rand_val.append(val)
         rand_dict = dict(zip(rand_attr, rand_val))
         old_storage = copy.deepcopy(storage.all())
         with mock.patch('sys.stdout', new=StringIO()) as f:
@@ -618,8 +698,7 @@ class TestHBNBCommand(TestCase):
         for attr, val in rand_dict.items():
             self.assertEqual(storage.all()[rand_key].__dict__[attr],
                              val)
-            self.assertNotEqual(old_storage[rand_key].__dict__[attr],
-                                val)
+            self.assertNotIn(attr, old_storage[rand_key].__dict__)
         with open(storage._FileStorage__file_path, "r", encoding="utf-8") as f:
             json_dict = json.load(f)
         for attr, val in rand_dict.items():
@@ -627,9 +706,7 @@ class TestHBNBCommand(TestCase):
             self.assertEqual(val,
                              storage.all()[rand_key].
                              __dict__[attr])
-            self.assertNotEqual(val,
-                                old_storage[rand_key].
-                                __dict__[attr])
+            self.assertNotIn(attr, old_storage[rand_key].__dict__)
             break
 
     def test_count(self):
