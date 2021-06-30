@@ -29,6 +29,10 @@ class TestFileStorage(TestCase):
         """Test for correct instancing of FileStorage object."""
         self.assertIsInstance(self.engine, FileStorage)
 
+    def test_attribute_types(self):
+        """Test for correct attribute type of FileStorage file_path."""
+        self.assertIsInstance(self.engine._FileStorage__file_path, str)
+
     def test_all_method_type(self):
         """Test correct type return of the all method."""
         self.assertIsInstance(self.engine.all(), dict)

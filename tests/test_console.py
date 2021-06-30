@@ -336,14 +336,28 @@ class TestHBNBCommand(TestCase):
         self.assertEqual(f.getvalue(), "** attribute name missing **\n")
 
         # Correct message "** value missing **"
+        attr_dict = {"Amenity": {"name": ""},
+                     "City": {"state_id": "", "name": ""},
+                     "User":
+                     {"email": "", "password": "",
+                      "first_name": "", "last_name": ""},
+                     "Place":
+                     {"city_id": "", "user_id": "",
+                      "name": "", "description": "",
+                      "number_rooms": 0, "number_bathrooms": 0,
+                      "max_guest": 0, "price_by_night": 0,
+                      "latitude": 0.0, "longitude": 0.0,
+                      "amenity_ids": []},
+                     "Review":
+                     {"place_id": "", "user_id": "", "text": ""},
+                     "State": {"name": ""}}
         done = False
         while (done is False):
             try:
                 key = [key for key in storage.all()
                        if key.split(".")[0] != "BaseModel"]
                 rand_key = random.choice(key)
-                attr = [key for key in storage.all()[rand_key].__dict__
-                        if key not in ["id", "created_at", "updated_at"]]
+                attr = attr_dict[rand_key.split(".")[0]].keys()
                 rand_attr = random.sample(attr, 2)
                 done = True
             except ValueError:
@@ -361,8 +375,7 @@ class TestHBNBCommand(TestCase):
                 key = [key for key in storage.all()
                        if key.split(".")[0] != "BaseModel"]
                 rand_key = random.choice(key)
-                attr = [key for key in storage.all()[rand_key].__dict__
-                        if key not in ["id", "created_at", "updated_at"]]
+                attr = attr_dict[rand_key.split(".")[0]].keys()
                 rand_attr = random.sample(attr, 2)
                 done = True
             except ValueError:
@@ -370,7 +383,7 @@ class TestHBNBCommand(TestCase):
         rand_key = rand_key.split(".")
         rand_val = []
         for at in rand_attr:
-            if type(at) == str:
+            if type(attr_dict[rand_key[rand_key[0]]]) == str:
                 rand_val.append(''.join(random.choice(string.ascii_letters)
                                         for _ in range(20)))
             if type(at) == int:
