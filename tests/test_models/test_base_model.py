@@ -50,6 +50,11 @@ class TestBaseModel(TestCase):
         time.sleep(0.5)
         self.base_1.save()
 
+        base_1_key = type(self.base_1).__name__ + "." + self.base_1.id
+        with open("file.json", "r") as f:
+            json_text = f.read()
+        self.assertTrue(base_1_key in json_text)
+
         self.assertNotEqual(self.base_1.created_at, self.base_1.updated_at)
         self.assertNotEqual(self.base_1.updated_at, old_updated_at)
 
