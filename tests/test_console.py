@@ -612,7 +612,7 @@ class TestHBNBCommand(TestCase):
             json_dict = json.load(f)
         for attr, val in json_dict[rand_key].items():
             if attr == rand_attr:
-                self.assertEqual(str(val), str(rand_val))
+                self.assertEqual(val, str(rand_val))
                 self.assertEqual(val,
                                  storage.all()[rand_key].__dict__[rand_attr])
                 self.assertNotIn(attr,
