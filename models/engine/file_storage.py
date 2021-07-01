@@ -13,13 +13,6 @@
                 the loaded objects.
 """
 import json
-from models.base_model import BaseModel
-from models.user import User
-from models.place import Place
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.review import Review
 
 
 class FileStorage():
@@ -39,8 +32,9 @@ class FileStorage():
         Args:
             obj (obj): The object to be inserted to the __objects dictionary.
         """
-        key = "{}.{}".format(type(obj).__name__, obj.id)
-        FileStorage.__objects[key] = obj
+        if obj:
+            key = "{}.{}".format(type(obj).__name__, obj.id)
+            FileStorage.__objects[key] = obj
 
     def save(self):
         """Saves the contents of the __objects dictionary to a json file."""
@@ -55,11 +49,17 @@ class FileStorage():
         """Loads the contents of the json file and instantiates the loaded
         objects.
         """
+        from models.base_model import BaseModel
+        from models.user import User
+        from models.place import Place
+        from models.city import City
+        from models.amenity import Amenity
+        from models.state import State
+        from models.review import Review
         try:
             with open(FileStorage.__file_path, "r", encoding="utf-8") as f:
                 json_dict = json.load(f)
             for key, val in json_dict.items():
-                val = eval(key.split(".")[0])(**val)
-                FileStorage.__objects[key] = val
+                FileStorage.__objects[key] = eval(key.split(".")[0])(**val)
         except FileNotFoundError:
             pass
