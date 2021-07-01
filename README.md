@@ -1,5 +1,5 @@
 # AirBnB_clone
-
+![Foo](https://raw.githubusercontent.com/AlfredPianist/AirBnB_clone/master/img/65f4a1dd9c51265f49d0.png)
 ## Description
 
 This project is a limited clone of the AirBnB website. And, this release
