@@ -36,7 +36,6 @@ class TestBaseModel(TestCase):
         """Test for correct datetime creation and type."""
         self.assertIsInstance(self.base_1.created_at, datetime)
         self.assertIsInstance(self.base_1.updated_at, datetime)
-        self.assertNotEqual(self.base_1.created_at, self.base_1.updated_at)
 
     def test_str_magic_method(self):
         """Test for correct __str__ output"""

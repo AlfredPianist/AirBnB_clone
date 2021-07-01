@@ -30,7 +30,7 @@ class BaseModel:
                 if key in ["updated_at", "created_at"]:
                     setattr(self, key,
                             datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f"))
-                if key != "__class__":
+                elif key != "__class__":
                     setattr(self, key, value)
         else:
             self.id = str(uuid.uuid4())
@@ -58,10 +58,8 @@ class BaseModel:
         Returns:
             dict: The dictionary representation of a BaseModel object.
         """
-        base_dict = {"__class__": type(self).__name__}
-
-        for key, value in self.__dict__.items():
-            if key in ["updated_at", "created_at"]:
-                base_dict[key] = getattr(self, key).isoformat()
-            base_dict[key] = value
+        base_dict = self.__dict__.copy()
+        base_dict["__class__"] = type(self).__name__
+        base_dict["created_at"] = self.created_at.isoformat()
+        base_dict["updated_at"] = self.updated_at.isoformat()
         return base_dict
