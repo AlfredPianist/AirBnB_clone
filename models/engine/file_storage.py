@@ -32,18 +32,16 @@ class FileStorage():
         Args:
             obj (obj): The object to be inserted to the __objects dictionary.
         """
-        if obj:
-            key = "{}.{}".format(type(obj).__name__, obj.id)
-            FileStorage.__objects[key] = obj
+        key = "{}.{}".format(type(obj).__name__, obj.id)
+        FileStorage.__objects[key] = obj
 
     def save(self):
         """Saves the contents of the __objects dictionary to a json file."""
         with open(FileStorage.__file_path, "w", encoding="utf-8") as f:
-            if FileStorage.__objects is not None:
-                json_dict = {obj_key: obj_val.to_dict()
-                             for obj_key, obj_val
-                             in FileStorage.__objects.items()}
-                json.dump(json_dict, f)
+            json_dict = {obj_key: obj_val.to_dict()
+                         for obj_key, obj_val
+                         in FileStorage.__objects.items()}
+            json.dump(json_dict, f)
 
     def reload(self):
         """Loads the contents of the json file and instantiates the loaded
