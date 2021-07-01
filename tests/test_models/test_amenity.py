@@ -56,7 +56,8 @@ class TestAmenity(TestCase):
         """Test for correct datetime creation and type."""
         self.assertIsInstance(self.amenity_1.created_at, datetime)
         self.assertIsInstance(self.amenity_1.updated_at, datetime)
-        self.assertEqual(self.amenity_1.created_at, self.amenity_1.updated_at)
+        self.assertNotEqual(self.amenity_1.created_at,
+                            self.amenity_1.updated_at)
 
     def test_str_magic_method(self):
         """Test for correct __str__ output"""
