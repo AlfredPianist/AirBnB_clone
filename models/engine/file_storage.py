@@ -13,6 +13,13 @@
                 the loaded objects.
 """
 import json
+from models.base_model import BaseModel
+from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 
 
 class FileStorage():
@@ -38,26 +45,21 @@ class FileStorage():
     def save(self):
         """Saves the contents of the __objects dictionary to a json file."""
         with open(FileStorage.__file_path, "w", encoding="utf-8") as f:
-            json_dict = {obj_key: obj_val.to_dict()
-                         for obj_key, obj_val
-                         in FileStorage.__objects.items()}
-            json.dump(json_dict, f)
+            if FileStorage.__objects is not None:
+                json_dict = {obj_key: obj_val.to_dict()
+                             for obj_key, obj_val
+                             in FileStorage.__objects.items()}
+                json.dump(json_dict, f)
 
     def reload(self):
         """Loads the contents of the json file and instantiates the loaded
         objects.
         """
-        from models.base_model import BaseModel
-        from models.user import User
-        from models.place import Place
-        from models.city import City
-        from models.amenity import Amenity
-        from models.state import State
-        from models.review import Review
         try:
             with open(FileStorage.__file_path, "r", encoding="utf-8") as f:
                 json_dict = json.load(f)
             for key, val in json_dict.items():
-                FileStorage.__objects[key] = eval(key.split(".")[0])(**val)
+                val = eval(key.split(".")[0])(**val)
+                FileStorage.__objects[key] = val
         except FileNotFoundError:
             pass
