@@ -1,0 +1,26 @@
+.places {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
+.title {
+  font-size: 30px;
+  width: 100%;
+}
+
+.place {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 390px;
+  padding: 20px;
+  margin: 20px;
+  border: 1px solid #ff5a5f;
+  border-radius: 4px;
+}
+
+.name {
+  font-size: 30px;
+}

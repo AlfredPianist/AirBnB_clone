@@ -1,0 +1,92 @@
+.filters {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #ffffff;
+  height: 70px;
+  width: 100% - 60px;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  padding: 0px 30px;
+}
+
+.filters .filters-locations,
+.filters .filters-amenities {
+  position: relative;
+  height: 100%;
+  width: 25%;
+  padding: 0%;
+}
+
+.filters .filters-locations {
+  border-right: 1px solid #dddddd;
+}
+
+.filter-title,
+.filter-subtitle {
+  padding: 0% 5%;
+}
+
+.filter-title {
+  font-weight: 600;
+  margin-bottom: 0px;
+}
+
+.filter-subtitle {
+  font-weight: 400;
+  font-size: 14px;
+  margin-top: 0px;
+}
+
+.filters-locations .popover,
+.filters-amenities .popover {
+  position: absolute;
+  background-color: #fafafa;
+  border: 1px solid #dddddd;
+  width: 100%;
+  border-radius: 4px;
+  max-height: 0px;
+  overflow: hidden;
+  opacity: 0%;
+  padding: 0% 5%;
+  transition: max-height 0.6s, opacity 0.5s;
+  box-sizing: border-box;
+}
+
+.state {
+  font-size: 16px;
+}
+
+.popover .filters-amenities {
+  padding-left: 5%;
+}
+
+.popover .cities,
+.popover .filters-amenities {
+  list-style-type: none;
+}
+
+.filters-locations:hover .popover,
+.filters-amenities:hover .popover {
+  opacity: 100%;
+  max-height: 500%;
+}
+
+.search {
+  display: flex;
+  margin-left: auto;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  background-color: #ff5a5f;
+  color: #ffffff;
+  height: 48px;
+  width: 20%;
+  border: none;
+  border-radius: 4px;
+}
+
+.search:hover {
+  opacity: 90%;
+}

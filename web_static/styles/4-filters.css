@@ -1,0 +1,30 @@
+.filters {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #ffffff;
+  height: 70px;
+  width: 100% - 60px;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  padding: 0px 30px;
+}
+
+.search {
+  display: flex;
+  margin-left: auto;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  background-color: #ff5a5f;
+  color: #ffffff;
+  height: 48px;
+  width: 20%;
+  border: none;
+  border-radius: 4px;
+}
+
+.search:hover {
+  opacity: 90%;
+}
