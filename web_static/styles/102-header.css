@@ -1,0 +1,8 @@
+body > header {
+  grid-area: "header";
+  background-color: #ffffff;
+  height: 70px;
+  width: 100%;
+  border-bottom: 1px solid #cccccc;
+  background: no-repeat left 20px top 50% url("../images/logo.png");
+}

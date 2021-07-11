@@ -1,0 +1,135 @@
+.filters {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #ffffff;
+  height: 70px;
+  max-width: 98%;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  padding: 0px 30px;
+  gap: 2%;
+}
+
+.filters .filters-locations,
+.filters .filters-amenities {
+  position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  width: 25%;
+  padding: 0%;
+}
+
+.filters .filters-locations {
+  border-right: 1px solid #dddddd;
+}
+
+.filters .title-subtitle {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  position: relative;
+  height: 70px;
+}
+
+.filter-title,
+.filter-subtitle {
+  padding: 0% 5%;
+  margin: 0%;
+}
+
+.filter-title {
+  font-weight: 600;
+  margin-bottom: 0px;
+}
+
+.filter-subtitle {
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.cities {
+  padding-left: 5%;
+}
+
+.filters-locations .popover,
+.filters-amenities .popover {
+  margin-top: 70px;
+  position: absolute;
+  background-color: #fafafa;
+  border: 1px solid #dddddd;
+  width: 100%;
+  border-radius: 4px;
+  padding: 0% 5%;
+  max-height: 0px;
+  overflow: hidden;
+  opacity: 0%;
+  transition: max-height 0.6s, opacity 0.5s;
+  box-sizing: border-box;
+}
+
+.state {
+  font-size: 16px;
+}
+
+@media only screen and (max-width: 435px) {
+  .filter-title {
+    font-weight: bold;
+    font-size: 12px;
+  }
+  .filter-subtitle {
+    font-size: 10px;
+  }
+  .state {
+    font-weight: bold;
+    font-size: 12px;
+  }
+  .city,
+  .amenity {
+    font-size: 10px;
+  }
+}
+.popover .filters-amenities {
+  padding-left: 5%;
+}
+
+.popover .cities,
+.popover .filters-amenities {
+  list-style-type: none;
+}
+
+.filters-locations:hover .popover,
+.filters-amenities:hover .popover {
+  opacity: 100%;
+  max-height: 500%;
+}
+
+.search {
+  display: flex;
+  margin-left: auto;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  background-color: #ff5a5f;
+  color: #ffffff;
+  height: 48px;
+  width: 20%;
+  border: none;
+  border-radius: 4px;
+}
+
+@media only screen and (max-width: 472px) {
+  .search {
+    font-size: 14px;
+    font-weight: bold;
+    width: auto;
+    padding: 5%;
+  }
+}
+
+.search:hover {
+  opacity: 90%;
+}
